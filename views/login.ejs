@@ -1,0 +1,41 @@
+<%- include('./partials/header') %>
+<%- include('./partials/nav') %>
+
+<!-- Header-->
+        <header class="bg-dark py-5" id="login-header" style="background-image: url('/assets/login_background.jpg');">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">HELLO THERE!</h1>
+                </div>
+            </div>
+        </header>
+        <div class="container px-4 px-lg-5 mb-5">
+            <div class="row mt-5 justify-content-center">
+                
+                <div class="col-md-8 col-lg-8">
+                    <div class="card shadow-lg p-4">                       
+                        <% if (msg) { %>
+                            <h3 class="alert alert-danger text-center"><%= msg %></h3>
+                        <% } %>
+                        <form id="login-form" method="post" action="/login" novalidate>
+                            <div class="mb-3 col-md-12">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="text" class="form-control" name="email" id="email">
+                                <span class="error-message">*</span>
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" name="password" id="password">
+                                <span class="error-message">*</span>
+                            </div>
+                            <button type="submit" class="btn w-100" id="login-button">LOG IN</button>
+                        </form>
+                    </div>
+                </div>
+
+                
+                <p class="text-center mt-3">You don't have an account? <a href="/register">Register Here</a></p>
+            </div>
+        </div>
+
+<%- include('./partials/footer') %>

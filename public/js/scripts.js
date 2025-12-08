@@ -1,10 +1,5 @@
-/*!
-* Start Bootstrap - Shop Homepage v5.0.6 (https://startbootstrap.com/template/shop-homepage)
-* Copyright 2013-2023 Start Bootstrap
-* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-shop-homepage/blob/master/LICENSE)
-*/
-// This file is intentionally blank
-// Use this file to add JavaScript to your project
+const $ = selector => document.querySelector(selector);
+
 async function downloadSalesReport() {
     try {
         // Muestra un mensaje de carga (opcional)
@@ -51,3 +46,135 @@ async function downloadSalesReport() {
         alert('Error downloading PDF');
     }
 }
+
+const validateRegistration = event => {
+    event.preventDefault();
+
+    const firstName = $('#firstName');
+    const lastName = $('#lastName');
+    const email = $('#email');
+    const password = $('#password');
+    const repeatPassword = $('#repPassword');
+    const address = $('#address');
+    const province = $('#province');
+    const city = $('#city');
+    const postalCode = $('#postalCode');
+    const phone = $('#phone');
+    const phoneRegex = /^(\+?1)?[- ]?\(?[2-9]\d{2}\)?[- ]?\d{3}[- ]?\d{4}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const postalRegex = /^[A-Za-z]\d[A-Za-z]\s?\d[A-Za-z]\d$/;
+    let isValid = true;
+
+    if (!firstName.value.trim()) {
+        isValid = false;
+        firstName.classList.add('error-label');
+        firstName.nextElementSibling.textContent = 'First Name is required';
+    }
+    if (!lastName.value.trim()) {
+        isValid = false;
+        lastName.classList.add('error-label');
+        lastName.nextElementSibling.textContent = 'Last Name is required';
+    }
+    if (!emailRegex.test(email.value.trim())) {
+        isValid = false;
+        email.classList.add('error-label');
+        email.nextElementSibling.textContent = 'Email is required and must be valid';
+    }
+    if (!password.value.trim() || password.value !== repeatPassword.value) {
+        isValid = false;
+        password.classList.add('error-label');
+        password.nextElementSibling.textContent = 'Password is required and must be identical in Repeated Password';
+    }
+    if (!repeatPassword.value.trim()) {
+        isValid = false;
+        repeatPassword.classList.add('error-label');
+        repeatPassword.nextElementSibling.textContent = 'Repeated Password is required';
+    }
+    if (!address.value.trim()) {
+        isValid = false;
+        address.classList.add('error-label');
+        address.nextElementSibling.textContent = 'Address is required';
+    }
+    if (province.value == "") {
+        isValid = false;
+        province.classList.add('error-label');
+        province.nextElementSibling.textContent = 'Province is required';
+    }
+    if (!city.value.trim()) {
+        isValid = false;
+        city.classList.add('error-label');
+        city.nextElementSibling.textContent = 'City is required';
+    }
+    if (!postalRegex.test(postalCode.value.trim())) {
+        isValid = false;
+        postalCode.classList.add('error-label');
+        postalCode.nextElementSibling.textContent = 'Postal is required and must be valid';
+    }
+    if (!phoneRegex.test(phone.value.trim())) {
+        isValid = false;
+        phone.classList.add('error-label');
+        phone.nextElementSibling.textContent = 'Phone Number is required';
+    }
+
+    if (isValid) {
+        console.log('Valid Form');
+        event.target.submit();
+    }
+}
+
+const validateLogin = event => {
+    event.preventDefault();
+
+    const email = $('#email');
+    const password = $('#password');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let isValid = true;
+
+    if (!emailRegex.test(email.value.trim())) {
+        isValid = false;
+        email.classList.add('error-label');
+        email.nextElementSibling.textContent = 'Invalid email format';
+    }
+    if (!password.value.trim()) {
+        isValid = false;
+        password.classList.add('error-label');
+        password.nextElementSibling.textContent = 'Password is required';
+    }
+
+    if (isValid) {
+        console.log('Valid Form');
+        event.target.submit();
+    }
+}
+
+function onInputChange(form) {
+    const inputs = form.querySelectorAll('input');
+    const select = form.querySelector('#province');
+    inputs.forEach(element => {
+        element.addEventListener('input', () => {
+            element.classList.remove('error-label');
+            element.nextElementSibling.textContent = '*';
+        });
+    });
+    if (select) {
+        select.addEventListener('change', () => {
+            select.classList.remove('error-label');
+            select.nextElementSibling.textContent = '*';
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const registerForm = $('#register-form');
+    const loginForm = $('#login-form');
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', validateRegistration);
+        onInputChange(registerForm);
+    }
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', validateLogin);
+        onInputChange(loginForm);
+    }
+})
