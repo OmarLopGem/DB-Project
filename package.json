@@ -22,8 +22,10 @@
   "homepage": "https://github.com/OmarLopGem/DB-Project#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "connect-mongo": "^6.0.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-session": "^1.18.2",
     "mongoose": "^9.0.0",
     "nodemon": "^3.1.11",
     "pdfkit": "^0.17.2"
