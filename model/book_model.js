@@ -8,8 +8,9 @@ const bookSchema = mongoose.Schema({
     price: {type:Number, required:true},
     cover: {type:String, required:true},
     isbn: {type:String, required:true},
+    synopsis: { type: String, required: true },
     stock: {type:Number, required:true},
-    discount: {type:Number, required:true}
+    discount: {type:Number}
 }, {timestamps:true});
 
 const bookModel = mongoose.model("book", bookSchema);

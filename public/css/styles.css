@@ -692,8 +692,6 @@ progress {
   flex-shrink: 0;
   width: 100%;
   max-width: 100%;
-  padding-right: calc(var(--bs-gutter-x) * 0.5);
-  padding-left: calc(var(--bs-gutter-x) * 0.5);
   margin-top: var(--bs-gutter-y);
 }
 
@@ -10899,4 +10897,48 @@ header .container {
   .d-print-none {
     display: none !important;
   }
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.75);
+  opacity: 0;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: opacity .3s ease-in-out;
+}
+
+.image-container:hover .overlay {
+  opacity: 1;
+}
+
+.overlay p {
+  font-size: 0.85rem;
+}
+
+.book-card .card-body {
+  padding-top: 15px;
+}
+
+.card-discount {
+  font-weight: bold;
 }

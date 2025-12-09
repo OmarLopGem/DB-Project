@@ -1,10 +1,17 @@
 import bcrypt from "bcrypt";
 import userModel from "../model/user_model.js";
+import bookModel from "../model/book_model.js";
 
 class StoreController {
 
-    static showHome = (req,res) => {
-        res.render("home");
+    static showHome = async (req,res) => {
+        try {
+            const books = await bookModel.find();
+            res.render("home", { books });
+        } catch (error) {
+            console.log("Error loading books:", error);
+            res.render("home", { books: [] });
+        }
     };
 
     static showLogin = (req,res) => {
