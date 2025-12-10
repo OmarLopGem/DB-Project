@@ -1,5 +1,67 @@
 const $ = selector => document.querySelector(selector);
 
+async function handleClearCart(userId) {
+    if (!confirm("Are you sure you want to empty your cart?")) return;
+
+    try {
+        const response = await fetch(`/cart/clear/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            document.getElementById('cart-badge-count').innerText = '0';
+            document.getElementById('cart-subtotal').innerText = '0.00';
+            document.getElementById('cart-total-items').innerText = '0';
+            alert('Cart cleared successfully');
+        } else {
+            console.error('Error clearing cart');
+            alert('Could not clear cart. Please try again.');
+        }
+    } catch (error) {
+        console.error('Network error:', error);
+    }
+}
+
+function handleViewCart() {
+    // Redirige a la vista del carrito o abre un modal
+    window.location.href = '/cart';
+}
+
+async function handleAddCart(userId, bookId) {
+    if (!userId || !bookId) {
+        console.error("Missing userId or bookId");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/cart/add/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                bookId: bookId
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('cart-badge-count').innerText = data.itemBadge.toString();
+            document.getElementById('cart-total-items').innerText =  data.totalItems.toString();
+            document.getElementById('cart-subtotal').innerText = data.subTotal.toString();
+        } else {
+            console.error('Error adding book to cart');
+            alert('Could not add book to cart. Please try again.');
+        }
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 async function downloadSalesReport() {
     try {
         // Muestra un mensaje de carga (opcional)
@@ -172,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
         registerForm.addEventListener('submit', validateRegistration);
         onInputChange(registerForm);
     }
-    
+
     if (loginForm) {
         loginForm.addEventListener('submit', validateLogin);
         onInputChange(loginForm);

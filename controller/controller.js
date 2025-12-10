@@ -1,13 +1,23 @@
 import bcrypt from "bcrypt";
 import userModel from "../model/user_model.js";
 import bookModel from "../model/book_model.js";
+import cartModel from "../model/cart_model.js";
+import {cartUtils} from "../public/js/cart_utils.js";
 
 class StoreController {
 
     static showHome = async (req,res) => {
         try {
-            const books = await bookModel.find();
-            res.render("home", { books });
+            const books = await bookModel.find()
+            const userId = req.session.userId;
+            const cart = await cartModel
+                .findOne({userId: userId})
+                .populate('items.bookId')
+                .lean();
+            const totalItems = cart ? cartUtils.countTotalItems(cart) : 0;
+            const subTotal = cart ? cartUtils.calculateSubtotal(cart) : 0;
+            const cartCount = cart ? cart.items.length : 0;
+            res.render("home", {'books': books , 'totalItems': totalItems, 'subTotal': subTotal, 'cartCount': cartCount});
         } catch (error) {
             console.log("Error loading books:", error);
             res.render("home", { books: [] });

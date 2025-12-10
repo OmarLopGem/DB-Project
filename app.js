@@ -12,6 +12,8 @@ connectDB();
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended:true }));
 app.use(express.static('public'));
+app.use(express.json());
+
 
 app.use(session({
     secret: 'super-secret-key',
@@ -33,5 +35,5 @@ app.use((req, res, next) => {
 app.use('/', router);
 
 app.listen(port, () => {
-    console.log('Server is listening');
+    console.log('Server is listening port: ' + port);
 })

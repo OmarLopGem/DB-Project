@@ -23,15 +23,40 @@
                         <% } %>
                         
                     </ul>
-                    
+
                     <% if (session?.userType === "customer") { %>
-                        <form class="d-flex">
-                            <button class="btn btn-outline-dark" type="submit">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi-cart-fill me-1"></i>
                                 Cart
-                                <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                                <span id="cart-badge-count" class="badge bg-dark text-white ms-1 rounded-pill">
+                <%= typeof cartCount !== 'undefined' ? cartCount : 0 %>
+            </span>
                             </button>
-                        </form>
+
+                            <ul class="dropdown-menu dropdown-menu-end" style="min-width: 250px;">
+                                <li>
+                                    <div class="px-3 py-2">
+                                        <p class="mb-0 fw-bold">Subtotal: $<span id="cart-subtotal"><%= typeof subTotal !== 'undefined' ? subTotal : '0.00' %></span></p>
+                                        <small class="text-muted">Total Items: <span id="cart-total-items"><%= typeof cartCount !== 'undefined' ? cartCount : 0 %></span></small>
+                                    </div>
+                                </li>
+
+                                <li><hr class="dropdown-divider"></li>
+
+                                <li>
+                                    <button class="dropdown-item" type="button" onclick="handleViewCart()">
+                                        <i class="bi bi-eye me-2"></i>View Items
+                                    </button>
+                                </li>
+
+                                <li>
+                                    <button class="dropdown-item text-danger" type="button" onclick="handleClearCart('<%= session.userId %>')">
+                                        <i class="bi bi-trash me-2"></i>Clear Cart
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     <% } %>
                     
                 </div>
