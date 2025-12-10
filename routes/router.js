@@ -19,6 +19,9 @@ router.get('/login', StoreController.showLogin);
 // cart
 router.post('/cart/clear/:userId', CartController.clearCart);
 router.post('/cart/add/:userId', CartController.addBookToCart);
+router.get('/cart/:userId', CartController.showCart);
 
+// checkout
+// router.post('/checkout/:userId', );
 
 export default router;

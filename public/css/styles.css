@@ -621,8 +621,6 @@ progress {
   height: 100%;
 }
 
-/* Hace que la imagen ocupe TODO el alto de su columna,
-   manteniendo proporción y recortando lo que sobre */
 .img-fluid {
   width: 100%;
   height: 100%;

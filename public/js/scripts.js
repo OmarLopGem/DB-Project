@@ -26,9 +26,8 @@ async function handleClearCart(userId) {
     }
 }
 
-function handleViewCart() {
-    // Redirige a la vista del carrito o abre un modal
-    window.location.href = '/cart';
+function handleViewCart(userId) {
+    window.location.href = `/cart/${userId}`;
 }
 
 async function handleAddCart(userId, bookId) {
@@ -64,7 +63,7 @@ async function handleAddCart(userId, bookId) {
     }
 }
 
-
+// AUX METHODS
 function showConfirm(message) {
     return new Promise((resolve) => {
         const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
@@ -95,7 +94,6 @@ function showConfirm(message) {
         modal.show();
     });
 }
-
 function showToast(title, message, type = 'success') {
     const toastEl = document.getElementById('liveToast');
     const toast = new bootstrap.Toast(toastEl);
@@ -280,9 +278,25 @@ function onInputChange(form) {
     }
 }
 
+async function sendCheckoutData(orderData, userId) {
+    try {
+        const response = await fetch(`/order/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+        });
+        return await response.json();
+    }catch (e) {
+        throw e;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = $('#register-form');
     const loginForm = $('#login-form');
+    const checkOutForm = $('#checkoutForm');
 
     if (registerForm) {
         registerForm.addEventListener('submit', validateRegistration);
@@ -292,5 +306,205 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', validateLogin);
         onInputChange(loginForm);
+    }
+
+    if(checkOutForm){
+
+        // Format card number with spaces
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            e.target.value = formattedValue;
+        });
+
+        // Format expiry date with slash
+        document.getElementById('expiryDate').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        // Format postal code to uppercase
+        document.getElementById('postalCode').addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        // Only allow digits in CVV
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+
+        // Calculate totals on page load
+        calculateTotals();
+
+        // Form submission handler
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let isValid = true;
+
+            // Get form fields
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const address = document.getElementById('address');
+            const city = document.getElementById('city');
+            const province = document.getElementById('province');
+            const postalCode = document.getElementById('postalCode');
+            const paymentMethod = document.getElementById('paymentMethod');
+            const cardHolderName = document.getElementById('cardHolderName');
+            const cardNumber = document.getElementById('cardNumber');
+            const expiryDate = document.getElementById('expiryDate');
+            const cvv = document.getElementById('cvv');
+
+            // Validate shipping fields (if not using registered address)
+            const useRegisteredAddress = document.getElementById('useRegisteredAddress').checked;
+
+            if (!useRegisteredAddress) {
+                // Validate first name
+                if (!validateName(firstName.value)) {
+                    firstName.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    firstName.classList.remove('is-invalid');
+                    firstName.classList.add('is-valid');
+                }
+
+                // Validate last name
+                if (!validateName(lastName.value)) {
+                    lastName.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    lastName.classList.remove('is-invalid');
+                    lastName.classList.add('is-valid');
+                }
+
+                // Validate address
+                if (address.value.trim().length < 5) {
+                    address.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    address.classList.remove('is-invalid');
+                    address.classList.add('is-valid');
+                }
+
+                // Validate city
+                if (!validateName(city.value)) {
+                    city.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    city.classList.remove('is-invalid');
+                    city.classList.add('is-valid');
+                }
+
+                // Validate province
+                if (province.value === '') {
+                    province.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    province.classList.remove('is-invalid');
+                    province.classList.add('is-valid');
+                }
+
+                // Validate postal code
+                if (!validatePostalCode(postalCode.value)) {
+                    postalCode.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    postalCode.classList.remove('is-invalid');
+                    postalCode.classList.add('is-valid');
+                }
+            } else {
+                // If using registered address, ensure fields are marked as valid
+                [firstName, lastName, address, city, province, postalCode].forEach(function(field) {
+                    field.classList.remove('is-invalid');
+                    field.classList.add('is-valid');
+                });
+            }
+
+            // Validate payment method
+            if (paymentMethod.value === '') {
+                paymentMethod.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                paymentMethod.classList.remove('is-invalid');
+                paymentMethod.classList.add('is-valid');
+            }
+
+            // Validate card holder name
+            if (!validateName(cardHolderName.value)) {
+                cardHolderName.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                cardHolderName.classList.remove('is-invalid');
+                cardHolderName.classList.add('is-valid');
+            }
+
+            // Validate card number
+            if (!validateCardNumber(cardNumber.value)) {
+                cardNumber.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                cardNumber.classList.remove('is-invalid');
+                cardNumber.classList.add('is-valid');
+            }
+
+            // Validate expiry date
+            if (!validateExpiryDate(expiryDate.value)) {
+                expiryDate.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                expiryDate.classList.remove('is-invalid');
+                expiryDate.classList.add('is-valid');
+            }
+
+            // Validate CVV
+            if (!validateCVV(cvv.value)) {
+                cvv.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                cvv.classList.remove('is-invalid');
+                cvv.classList.add('is-valid');
+            }
+
+            if (isValid) {
+                // Form is valid, proceed with submission
+                console.log('Form is valid, submitting...');
+
+                // Prepare order data
+                const orderData = {
+                    shipping: {
+                        firstName: firstName.value,
+                        lastName: lastName.value,
+                        address: address.value,
+                        city: city.value,
+                        province: province.value,
+                        postalCode: postalCode.value
+                    },
+                    payment: {
+                        method: paymentMethod.value,
+                        cardHolderName: cardHolderName.value,
+                        cardNumber: cardNumber.value.replace(/\s/g, ''),
+                        expiryDate: expiryDate.value,
+                        cvv: cvv.value
+                    }
+                };
+
+                console.log('Order data:', orderData);
+
+                sendCheckoutData(orderData,);
+
+                alert('Order placed successfully! (This is a demo)');
+            } else {
+                // Scroll to first invalid field
+                const firstInvalid = document.querySelector('.is-invalid');
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+
     }
 })

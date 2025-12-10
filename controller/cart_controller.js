@@ -1,17 +1,18 @@
 import cartModel from '../model/cart_model.js';
 import bookModel from '../model/book_model.js';
 import {cartUtils} from "../public/js/cart_utils.js";
+import userModel from "../model/user_model.js";
 
 export default class CartController {
     static getCartById = async (req, res) => {
         try {
-            const { userId } = req.params;
+            const {userId} = req.params;
 
-            let cart = await cartModel.findOne({ userId }).populate('items.bookId');
+            let cart = await cartModel.findOne({userId}).populate('items.bookId');
 
             // If cart doesn't exist, create empty cart
             if (!cart) {
-                cart = new cartModel({ userId, items: [] });
+                cart = new cartModel({userId, items: []});
                 await cart.save();
             }
 
@@ -55,19 +56,19 @@ export default class CartController {
                 }
             });
         } catch (error) {
-            res.status(500).json({ message: "Error fetching cart", error: error.message });
+            res.status(500).json({message: "Error fetching cart", error: error.message});
         }
     };
 
     static addBookToCart = async (req, res) => {
         try {
-            const { userId } = req.params;
-            const { bookId, quantity = 1 } = req.body;
+            const {userId} = req.params;
+            const {bookId, quantity = 1} = req.body;
 
 
             const book = await bookModel.findById(bookId);
             if (!book) {
-                return res.status(404).json({ message: "Book not found" });
+                return res.status(404).json({message: "Book not found"});
             }
 
             if (book.stock < quantity) {
@@ -76,10 +77,10 @@ export default class CartController {
                 });
             }
 
-            let cart = await cartModel.findOne({ userId });
+            let cart = await cartModel.findOne({userId});
 
             if (!cart) {
-                cart = new cartModel({ userId, items: [] });
+                cart = new cartModel({userId, items: []});
             }
 
             const existingItemIndex = cart.items.findIndex(
@@ -97,7 +98,7 @@ export default class CartController {
 
                 cart.items[existingItemIndex].quantity = newQuantity;
             } else {
-                cart.items.push({ bookId, quantity });
+                cart.items.push({bookId, quantity});
             }
 
             await cart.save();
@@ -107,28 +108,28 @@ export default class CartController {
                 message: "Item added to cart successfully",
                 cart,
                 ...{
-                    itemBadge : cart.items.length,
-                    subTotal : cartUtils.calculateSubtotal(cart),
-                    totalItems : cartUtils.countTotalItems(cart)
+                    itemBadge: cart.items.length,
+                    subTotal: cartUtils.calculateSubtotal(cart),
+                    totalItems: cartUtils.countTotalItems(cart)
                 }
             });
         } catch (error) {
-            res.status(500).json({ message: "Error adding item to cart", error: error.message });
+            res.status(500).json({message: "Error adding item to cart", error: error.message});
         }
     };
 
     static updateCartItem = async (req, res) => {
         try {
-            const { userId, bookId } = req.params;
-            const { quantity } = req.body;
+            const {userId, bookId} = req.params;
+            const {quantity} = req.body;
 
             if (!quantity || quantity < 1) {
-                return res.status(400).json({ message: "Quantity must be at least 1" });
+                return res.status(400).json({message: "Quantity must be at least 1"});
             }
 
             const book = await bookModel.findById(bookId);
             if (!book) {
-                return res.status(404).json({ message: "Book not found" });
+                return res.status(404).json({message: "Book not found"});
             }
 
             if (book.stock < quantity) {
@@ -137,9 +138,9 @@ export default class CartController {
                 });
             }
 
-            const cart = await cartModel.findOne({ userId });
+            const cart = await cartModel.findOne({userId});
             if (!cart) {
-                return res.status(404).json({ message: "Cart not found" });
+                return res.status(404).json({message: "Cart not found"});
             }
 
             const itemIndex = cart.items.findIndex(
@@ -147,7 +148,7 @@ export default class CartController {
             );
 
             if (itemIndex === -1) {
-                return res.status(404).json({ message: "Item not found in cart" });
+                return res.status(404).json({message: "Item not found in cart"});
             }
 
             cart.items[itemIndex].quantity = quantity;
@@ -159,17 +160,17 @@ export default class CartController {
                 cart
             });
         } catch (error) {
-            res.status(500).json({ message: "Error updating cart item", error: error.message });
+            res.status(500).json({message: "Error updating cart item", error: error.message});
         }
     };
 
     static removeFromCart = async (req, res) => {
         try {
-            const { userId, bookId } = req.params;
+            const {userId, bookId} = req.params;
 
-            const cart = await cartModel.findOne({ userId });
+            const cart = await cartModel.findOne({userId});
             if (!cart) {
-                return res.status(404).json({ message: "Cart not found" });
+                return res.status(404).json({message: "Cart not found"});
             }
 
             cart.items = cart.items.filter(
@@ -184,17 +185,17 @@ export default class CartController {
                 cart
             });
         } catch (error) {
-            res.status(500).json({ message: "Error removing item from cart", error: error.message });
+            res.status(500).json({message: "Error removing item from cart", error: error.message});
         }
     };
 
     static clearCart = async (req, res) => {
         try {
-            const { userId } = req.params;
+            const {userId} = req.params;
 
-            const cart = await cartModel.findOne({ userId });
+            const cart = await cartModel.findOne({userId});
             if (!cart) {
-                return res.status(404).json({ message: "Cart not found" });
+                return res.status(404).json({message: "Cart not found"});
             }
 
             cart.items = [];
@@ -205,17 +206,17 @@ export default class CartController {
                 cart
             });
         } catch (error) {
-            res.status(500).json({ message: "Error clearing cart", error: error.message });
+            res.status(500).json({message: "Error clearing cart", error: error.message});
         }
     };
 
     static validateCart = async (req, res) => {
         try {
-            const { userId } = req.params;
+            const {userId} = req.params;
 
-            const cart = await cartModel.findOne({ userId }).populate('items.bookId');
+            const cart = await cartModel.findOne({userId}).populate('items.bookId');
             if (!cart || cart.items.length === 0) {
-                return res.status(400).json({ message: "Cart is empty" });
+                return res.status(400).json({message: "Cart is empty"});
             }
 
             const issues = [];
@@ -252,25 +253,46 @@ export default class CartController {
                 valid: true
             });
         } catch (error) {
-            res.status(500).json({ message: "Error validating cart", error: error.message });
+            res.status(500).json({message: "Error validating cart", error: error.message});
         }
     };
 
     static getCartCount = async (req, res) => {
         try {
-            const { userId } = req.params;
+            const {userId} = req.params;
 
-            const cart = await cartModel.findOne({ userId });
+            const cart = await cartModel.findOne({userId});
 
             if (!cart) {
-                return res.status(200).json({ count: 0 });
+                return res.status(200).json({count: 0});
             }
 
             const count = cart.items.reduce((total, item) => total + item.quantity, 0);
 
-            res.status(200).json({ count });
+            res.status(200).json({count});
         } catch (error) {
-            res.status(500).json({ message: "Error fetching cart count", error: error.message });
+            res.status(500).json({message: "Error fetching cart count", error: error.message});
         }
     };
+
+
+    static showCart = async (req, res) => {
+        try {
+            const {userId} = req.params;
+            let cart = await cartModel.findOne({userId}).populate('items.bookId');
+            let user = await userModel.findById(userId);
+            if (!cart) {
+                res.status(404).json({message: "Cart not found"});
+            }
+            const totalItems = cart ? cartUtils.countTotalItems(cart) : 0;
+            const subTotal = cart ? cartUtils.calculateSubtotal(cart) : 0;
+            const cartCount = cart ? cart.items.length : 0;
+            res.render('checkout', {
+                'cartItems': cart.items,
+                'user': user, 'totalItems': totalItems, 'subTotal': subTotal, 'cartCount': cartCount
+            })
+        } catch (error) {
+            res.status(500).json({message: "Error fetching cart", error: error.message});
+        }
+    }
 }
