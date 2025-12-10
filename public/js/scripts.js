@@ -1,7 +1,8 @@
 const $ = selector => document.querySelector(selector);
 
 async function handleClearCart(userId) {
-    if (!confirm("Are you sure you want to empty your cart?")) return;
+    const confirmed = await showConfirm('Are you sure you want to empty your cart?');
+    if (!confirmed) return;
 
     try {
         const response = await fetch(`/cart/clear/${userId}`, {
@@ -15,10 +16,10 @@ async function handleClearCart(userId) {
             document.getElementById('cart-badge-count').innerText = '0';
             document.getElementById('cart-subtotal').innerText = '0.00';
             document.getElementById('cart-total-items').innerText = '0';
-            alert('Cart cleared successfully');
+            showToast('Success', 'Your cart has been emptied.', 'success');
         } else {
             console.error('Error clearing cart');
-            alert('Could not clear cart. Please try again.');
+            showToast('Error', 'Could not clear cart. Please try again.', 'error');
         }
     } catch (error) {
         console.error('Network error:', error);
@@ -49,17 +50,70 @@ async function handleAddCart(userId, bookId) {
 
         if (response.ok) {
             const data = await response.json();
+            showToast('Success', 'Book added to cart successfully!', 'success');
             document.getElementById('cart-badge-count').innerText = data.itemBadge.toString();
             document.getElementById('cart-total-items').innerText =  data.totalItems.toString();
             document.getElementById('cart-subtotal').innerText = data.subTotal.toString();
         } else {
             console.error('Error adding book to cart');
-            alert('Could not add book to cart. Please try again.');
+            showToast('Error','Could not add book to cart. Please try again.', 'error');
         }
 
     } catch (error) {
         console.error(error);
     }
+}
+
+
+function showConfirm(message) {
+    return new Promise((resolve) => {
+        const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        document.getElementById('confirmMessage').textContent = message;
+
+        document.getElementById('confirmBtn').onclick = () => {
+            modal.hide();
+            resolve(true);
+        };
+
+        const cancelBtn = document.querySelector('#confirmModal [data-bs-dismiss="modal"]');
+        const closeBtn = document.querySelector('#confirmModal .btn-close');
+
+        cancelBtn.onclick = () => {
+            modal.hide();
+            resolve(false);
+        };
+
+        closeBtn.onclick = () => {
+            modal.hide();
+            resolve(false);
+        };
+
+        document.getElementById('confirmModal').addEventListener('hidden.bs.modal', () => {
+            resolve(false);
+        }, { once: true });
+
+        modal.show();
+    });
+}
+
+function showToast(title, message, type = 'success') {
+    const toastEl = document.getElementById('liveToast');
+    const toast = new bootstrap.Toast(toastEl);
+
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastMessage').textContent = message;
+
+    // Cambiar color según tipo
+    toastEl.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'text-white');
+    if (type === 'success') {
+        toastEl.classList.add('bg-success', 'text-white');
+    } else if (type === 'error') {
+        toastEl.classList.add('bg-danger', 'text-white');
+    } else if (type === 'warning') {
+        toastEl.classList.add('bg-warning');
+    }
+
+    toast.show();
 }
 
 async function downloadSalesReport() {

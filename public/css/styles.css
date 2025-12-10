@@ -445,6 +445,20 @@ legend + * {
   -webkit-appearance: textfield;
 }
 
+.toast {
+    min-width: 250px;
+}
+
+.toast.bg-success .toast-body,
+.toast.bg-danger .toast-body {
+    color: white;
+}
+
+/* Modal más suave */
+.modal-content {
+    border-radius: 10px;
+}
+
 /* rtl:raw:
 [type="tel"],
 [type="url"],
