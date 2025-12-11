@@ -41,12 +41,15 @@
                             >
                                 Synopsis
                             </button>
-                            <button
+                            <% if (session?.userType === "admin") { %>
+                                <button
                                     onclick="handleManageBook('<%= book._id %>')"
                                     class="btn btn-warning btn-sm"
-                            >
-                                Edit Book
-                            </button>
+                                >
+                                    Edit Book
+                                </button>
+                            <% } %>
+                            
                         </div>
                     </div>
 

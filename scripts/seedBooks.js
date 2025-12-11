@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bookModel from "../model/book_model.js"; // AJUSTA si pones el archivo en otra carpeta
 
 // ⬅️ TU CADENA DE CONEXIÓN A MONGO AQUÍ
-const MONGO_URI = "mongodb+srv://j-omar:LOGjor1602@cluster0.rmdoztf.mongodb.net/NewPages";
+const MONGO_URI = "mongodb+srv://j-omar:LOGjor1602@cluster0.rmdoztf.mongodb.net/NewPagesSystems_DB";
 
 const books = [
     {

@@ -2,7 +2,11 @@
 <%- include('./partials/nav') %>
 
 <div class="container my-5">
-    <h2 class="mb-4">My Orders</h2>
+    <% if (session?.userType === "admin") { %>
+        <h2 class="mb-4">All Orders</h2>
+    <% } else {%>
+        <h2 class="mb-4">My Orders</h2>
+    <% } %>
 
     <% if (orders && orders.length > 0) { %>
         <% orders.forEach(order => { %>

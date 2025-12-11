@@ -63,7 +63,6 @@ async function handleAddCart(userId, bookId) {
     }
 }
 
-// AUX METHODS
 function showConfirm(message) {
     return new Promise((resolve) => {
         const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
@@ -101,7 +100,6 @@ function showToast(title, message, type = 'success') {
     document.getElementById('toastTitle').textContent = title;
     document.getElementById('toastMessage').textContent = message;
 
-    // Cambiar color según tipo
     toastEl.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'text-white');
     if (type === 'success') {
         toastEl.classList.add('bg-success', 'text-white');
@@ -116,10 +114,8 @@ function showToast(title, message, type = 'success') {
 
 async function downloadSalesReport() {
     try {
-        // Muestra un mensaje de carga (opcional)
         console.log('Generating PDF...');
 
-        // Haz la petición al backend
         const response = await fetch('http://localhost:9090/api/reports/sales/pdf', {
             method: 'POST',
             headers: {
@@ -131,25 +127,20 @@ async function downloadSalesReport() {
             })
         });
 
-        // Verifica si la respuesta fue exitosa
         if (!response.ok) {
             throw new Error('Error generating PDF');
         }
 
-        // Convierte la respuesta a blob
         const blob = await response.blob();
 
-        // Crea un URL temporal para el blob
         const url = window.URL.createObjectURL(blob);
 
-        // Crea un elemento <a> temporal para forzar la descarga
         const a = document.createElement('a');
         a.href = url;
         a.download = 'sales-report.pdf';
         document.body.appendChild(a);
         a.click();
 
-        // Limpia
         a.remove();
         window.URL.revokeObjectURL(url);
 
@@ -335,6 +326,21 @@ async function handleManageBook(bookId) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    let currentSize = parseInt(localStorage.getItem("fontSize")) || 16;
+
+    document.documentElement.style.fontSize = currentSize + "px";
+
+    function toggleFontSize() {
+        if (currentSize === 16) currentSize = 18;
+        else if (currentSize === 18) currentSize = 20;
+        else currentSize = 16;
+        document.documentElement.style.fontSize = currentSize + "px";
+        localStorage.setItem("fontSize", currentSize);
+    }
+
+    window.toggleFontSize = toggleFontSize;
+    
     const registerForm = $('#register-form');
     const loginForm = $('#login-form');
     const checkOutForm = $('#checkoutForm');
@@ -353,14 +359,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if(checkOutForm){
 
-        // Format card number with spaces
         document.getElementById('cardNumber').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\s/g, '');
             let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
             e.target.value = formattedValue;
         });
 
-        // Format expiry date with slash
         document.getElementById('expiryDate').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             if (value.length >= 2) {
@@ -369,27 +373,22 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.value = value;
         });
 
-        // Format postal code to uppercase
         document.getElementById('postalCode').addEventListener('input', function(e) {
             e.target.value = e.target.value.toUpperCase();
         });
 
-        // Only allow digits in CVV
         document.getElementById('cvv').addEventListener('input', function(e) {
             e.target.value = e.target.value.replace(/\D/g, '');
         });
 
-        // Calculate totals on page load
         calculateTotals();
 
-        // Form submission handler
         document.getElementById('checkoutForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             e.stopPropagation();
 
             let isValid = true;
 
-            // Get form fields
             const firstName = document.getElementById('firstName');
             const lastName = document.getElementById('lastName');
             const address = document.getElementById('address');
@@ -403,11 +402,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const cvv = document.getElementById('cvv');
             const userId = document.getElementById('userId').value;
 
-            // Validate shipping fields (if not using registered address)
             const useRegisteredAddress = document.getElementById('useRegisteredAddress').checked;
 
             if (!useRegisteredAddress) {
-                // Validate first name
                 if (!validateName(firstName.value)) {
                     firstName.classList.add('is-invalid');
                     isValid = false;
@@ -416,7 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     firstName.classList.add('is-valid');
                 }
 
-                // Validate last name
                 if (!validateName(lastName.value)) {
                     lastName.classList.add('is-invalid');
                     isValid = false;
@@ -425,7 +421,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     lastName.classList.add('is-valid');
                 }
 
-                // Validate address
                 if (address.value.trim().length < 5) {
                     address.classList.add('is-invalid');
                     isValid = false;
@@ -434,7 +429,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     address.classList.add('is-valid');
                 }
 
-                // Validate city
                 if (!validateName(city.value)) {
                     city.classList.add('is-invalid');
                     isValid = false;
@@ -443,7 +437,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     city.classList.add('is-valid');
                 }
 
-                // Validate province
                 if (province.value === '') {
                     province.classList.add('is-invalid');
                     isValid = false;
@@ -452,7 +445,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     province.classList.add('is-valid');
                 }
 
-                // Validate postal code
                 if (!validatePostalCode(postalCode.value)) {
                     postalCode.classList.add('is-invalid');
                     isValid = false;
@@ -461,14 +453,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     postalCode.classList.add('is-valid');
                 }
             } else {
-                // If using registered address, ensure fields are marked as valid
                 [firstName, lastName, address, city, province, postalCode].forEach(function (field) {
                     field.classList.remove('is-invalid');
                     field.classList.add('is-valid');
                 });
             }
 
-            // Validate payment method
             if (paymentMethod.value === '') {
                 paymentMethod.classList.add('is-invalid');
                 isValid = false;
@@ -477,7 +467,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 paymentMethod.classList.add('is-valid');
             }
 
-            // Validate card holder name
             if (!validateName(cardHolderName.value)) {
                 cardHolderName.classList.add('is-invalid');
                 isValid = false;
@@ -486,7 +475,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 cardHolderName.classList.add('is-valid');
             }
 
-            // Validate card number
             if (!validateCardNumber(cardNumber.value)) {
                 cardNumber.classList.add('is-invalid');
                 isValid = false;
@@ -495,7 +483,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 cardNumber.classList.add('is-valid');
             }
 
-            // Validate expiry date
             if (!validateExpiryDate(expiryDate.value)) {
                 expiryDate.classList.add('is-invalid');
                 isValid = false;
@@ -504,7 +491,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 expiryDate.classList.add('is-valid');
             }
 
-            // Validate CVV
             if (!validateCVV(cvv.value)) {
                 cvv.classList.add('is-invalid');
                 isValid = false;
@@ -514,10 +500,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (isValid) {
-                // Form is valid, proceed with submission
                 console.log('Form is valid, submitting...');
 
-                // Prepare order data
                 const orderData = {
                     userId: userId,
                     paymentInfo: {
@@ -537,7 +521,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = `/home`;
                 }, 1200);
             } else {
-                // Scroll to first invalid field
                 const firstInvalid = document.querySelector('.is-invalid');
                 if (firstInvalid) {
                     firstInvalid.scrollIntoView({behavior: 'smooth', block: 'center'});

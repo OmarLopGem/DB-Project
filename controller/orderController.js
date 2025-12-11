@@ -3,7 +3,7 @@ import bookModel from '../model/book_model.js';
 import userModel from '../model/user_model.js';
 import cartModel from "../model/cart_model.js";
 import CartController from "./cart_controller.js";
-import reportController from "./ReportController.js";
+import reportController from "./reportController.js";
 
 const generateInvoiceNumber = async () => {
     const prefix = 'INV';
@@ -34,25 +34,21 @@ export const createOrder = async (req, res) => {
     try {
         const { userId, paymentInfo } = req.body;
 
-        // Validar userId
         if (!userId) {
             return res.status(400).json({ message: "User ID is required" });
         }
 
-        // Obtener información del usuario
         const user = await userModel.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Crear userSnapshot desde el usuario
         const userSnapshot = {
             name: user.name,
             email: user.email,
             address: user.address || ''
         };
 
-        // cart
         const {items} = await cartModel.findOne({userId}).populate('items.bookId') || {items: []};
         if (items.length === 0) {
             return res.status(400).json({ message: "Cart is empty" });
@@ -108,7 +104,6 @@ export const createOrder = async (req, res) => {
 
             totalAmount += subtotal;
 
-            // Reduce stock
             book.stock -= item.quantity;
             await book.save();
         }
@@ -133,7 +128,6 @@ export const createOrder = async (req, res) => {
         });
 
         const savedOrder = await newOrder.save();
-        // Clear user's cart
         await CartController.clearCartByUserId(userId);
 
         res.status(201).json({
@@ -147,15 +141,7 @@ export const createOrder = async (req, res) => {
 
 export const getAllOrdersoBJECTS = async (req, res) => {
     try {
-        const {
-            page = 1,
-            limit = 10,
-            status,
-            startDate,
-            endDate,
-            email,
-            paymentMethod
-        } = req.query;
+        const {page = 1, limit = 10, status, startDate, endDate, email, paymentMethod} = req.query;
 
         const filter = {};
 
@@ -234,8 +220,6 @@ export const updateOrderStatus = async (req, res) => {
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
-
-        // If cancelling, restore stock
         if (status === 'cancelled' && order.status !== 'cancelled') {
             for (const item of order.items) {
                 await bookModel.findByIdAndUpdate(
