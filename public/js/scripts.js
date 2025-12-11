@@ -152,6 +152,32 @@ async function downloadSalesReport() {
     }
 }
 
+async function handleDeleteBook(bookId) {
+    const confirmed = await showConfirm('Are you sure you want to delete this book?');
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch(`/book/${bookId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            showToast('Success', 'Book deleted successfully.', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1200);
+        } else {
+            console.error('Error deleting book');
+            showToast('Error', 'Could not delete book. Please try again.', 'error');
+        }
+    } catch (error) {
+        console.error('Network error:', error);
+    }
+}
+
 const validateRegistration = event => {
     event.preventDefault();
 

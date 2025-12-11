@@ -44,9 +44,16 @@
                             <% if (session?.userType === "admin") { %>
                                 <button
                                     onclick="handleManageBook('<%= book._id %>')"
-                                    class="btn btn-warning btn-sm"
+                                    class="btn btn-warning btn-sm mb-2"
                                 >
                                     Edit Book
+                                </button>
+
+                                <button
+                                        onclick="handleDeleteBook('<%= book._id %>')"
+                                        class="btn btn-danger btn-sm"
+                                >
+                                    Delete Book
                                 </button>
                             <% } %>
                             

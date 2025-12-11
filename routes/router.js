@@ -35,6 +35,6 @@ router.get('/order/pdf/:orderId', getPdfOrderInvoice);
 router.get('/book/:bookId', BookController.manageBookView);
 router.post('/book', BookController.createBook);
 router.put('/book/:bookId', BookController.updateBook);
-// router.delete('/book/:bookId', BookController.deleteBook);
+router.delete('/book/:bookId', BookController.deleteBook);
 
 export default router;
