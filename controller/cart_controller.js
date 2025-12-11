@@ -1,3 +1,5 @@
+// Jorge Omar Lopez Gemigniani 9049992
+// Daniel Garrido Quinde 9042293
 import cartModel from '../model/cart_model.js';
 import bookModel from '../model/book_model.js';
 import {cartUtils} from "../public/js/cart_utils.js";

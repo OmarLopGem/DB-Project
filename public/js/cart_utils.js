@@ -1,3 +1,5 @@
+// Jorge Omar Lopez Gemigniani 9049992
+// Daniel Garrido Quinde 9042293
 export const cartUtils = {
     countUniqueItems: (cart) => {
         if (!cart || !cart.items) return 0;

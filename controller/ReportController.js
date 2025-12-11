@@ -1,3 +1,5 @@
+// Jorge Omar Lopez Gemigniani 9049992
+// Daniel Garrido Quinde 9042293
 import pdfService from '../service/pdfService.js';
 
 class ReportController {

@@ -1,4 +1,5 @@
-
+// Jorge Omar Lopez Gemigniani 9049992
+// Daniel Garrido Quinde 9042293
 import reportController from './reportController.js';
 
 const generateSalesReport = async (req, res) => {

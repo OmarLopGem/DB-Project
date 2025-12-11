@@ -1,3 +1,5 @@
+// Jorge Omar Lopez Gemigniani 9049992
+// Daniel Garrido Quinde 9042293
 import bookModel from "../model/book_model.js";
 
 export default class BookController {

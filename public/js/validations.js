@@ -1,3 +1,5 @@
+// Jorge Omar Lopez Gemigniani 9049992
+// Daniel Garrido Quinde 9042293
 function validateName(name) {
     const nameRegex = /^[a-zA-Z\s'-]+$/;
     return nameRegex.test(name) && name.trim().length >= 2;

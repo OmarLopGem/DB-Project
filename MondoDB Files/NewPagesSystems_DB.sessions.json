@@ -1,0 +1,7 @@
+[{
+  "_id": "3bvalK-W91t1Owk1Fm4MXKvyMaVBsb_R",
+  "expires": {
+    "$date": "2025-12-25T21:56:40.125Z"
+  },
+  "session": "{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"validUser\":true,\"userId\":\"693b3df8cdf2c7547f74b651\",\"userType\":\"customer\"}"
+}]

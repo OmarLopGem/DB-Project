@@ -1,3 +1,5 @@
+// Jorge Omar Lopez Gemigniani 9049992
+// Daniel Garrido Quinde 9042293
 import express from 'express';
 import session from 'express-session';
 import router from './routes/router.js';

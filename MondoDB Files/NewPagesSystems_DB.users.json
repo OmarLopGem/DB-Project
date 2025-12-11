@@ -1,0 +1,114 @@
+[{
+  "_id": {
+    "$oid": "693b132adfb619724c140846"
+  },
+  "firstName": "Jorge",
+  "lastName": "Lopez",
+  "email": "jolopgem@gmail.com",
+  "password": "$2b$10$kri.FNvwIsE2mqEW15UFlOd6EOypTXaKJ3UZbqR3pyGtuH.cEmQCq",
+  "phone": "2234567890",
+  "address": "99 Conestoga Blvd,Kitchener,ON,N2P 2N5",
+  "userType": "customer",
+  "createdAt": {
+    "$date": "2025-12-11T18:53:30.311Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T18:53:30.311Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693b14bddfb619724c14086f"
+  },
+  "firstName": "admin",
+  "lastName": "admin",
+  "email": "admin@gmail.com",
+  "password": "$2b$10$9huF1pbWcQhrM3/zXf34E.nJ7v8a4cyI86vvuqTd4kkCJEGBtAQGm",
+  "phone": "2234567890",
+  "address": "99 Conestoga Blvd,Kitchener,MB,N2P 2N5",
+  "userType": "admin",
+  "createdAt": {
+    "$date": "2025-12-11T19:00:13.982Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T19:00:13.982Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693b3a71cdf2c7547f74b5bb"
+  },
+  "firstName": "Elizabeth",
+  "lastName": "Ricardez",
+  "email": "eli@gmail.com",
+  "password": "$2b$10$Ok5E9VnG4.foNmztkO.xJeLsrCT2DOPbsb.UWhjTdVRzNToQ9ed7W",
+  "phone": "5548971236",
+  "address": "86 Doon Mills Dr,Kitchener,ON,N2P 2S3",
+  "userType": "customer",
+  "createdAt": {
+    "$date": "2025-12-11T21:41:05.204Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T21:41:05.204Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693b3c9ecdf2c7547f74b5fc"
+  },
+  "firstName": "Andrea",
+  "lastName": "Lopez",
+  "email": "andy@gmail.com",
+  "password": "$2b$10$hVPaMpImZyBpIFftAcq0qONOXlXNu00z.87omSKRBE/D6oDCabm5a",
+  "phone": "6598231456",
+  "address": "525 Langevin St,Winnipeg,MB,R2H 2V9",
+  "userType": "customer",
+  "createdAt": {
+    "$date": "2025-12-11T21:50:22.345Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T21:50:22.345Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693b3d46cdf2c7547f74b628"
+  },
+  "firstName": "Jake",
+  "lastName": "Evans",
+  "email": "jake@gmail.com",
+  "password": "$2b$10$UcAa/gXo/PCpxk6FNHBDBO2M.5k62TJfai8ZS2owKbPHcNvuzbkgu",
+  "phone": "5541237652",
+  "address": "372 Pierre-Bertrand Blvd,Quebec,QC,G1M 2C8",
+  "userType": "customer",
+  "createdAt": {
+    "$date": "2025-12-11T21:53:10.391Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T21:53:10.391Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693b3df8cdf2c7547f74b651"
+  },
+  "firstName": "Neil",
+  "lastName": "Comfort",
+  "email": "neil@gmail.com",
+  "password": "$2b$10$GvQ08YfrOlz.Vr7Xcw7.a.YNYAlqMZgXpuYXNSvIkJeQ2XIUASQsy",
+  "phone": "14237659804",
+  "address": "2 Shoreham Ave,Ottawa,ON,K2G 3T7",
+  "userType": "customer",
+  "createdAt": {
+    "$date": "2025-12-11T21:56:08.382Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T21:56:08.382Z"
+  },
+  "__v": 0
+}]

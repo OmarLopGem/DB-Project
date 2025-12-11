@@ -1,3 +1,5 @@
+<!-- Jorge Omar Lopez Gemigniani 9049992
+Daniel Garrido Quinde 9042293 -->
 <%- include('./partials/header') %>
 <%- include('./partials/nav') %>
 
@@ -254,7 +256,6 @@
         testImg.src = coverUrl;
     }
 
-    // Auto-preview if editing existing book
     <% if (book && book.cover) { %>
     window.addEventListener('DOMContentLoaded', function() {
         loadCoverPreview();

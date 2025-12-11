@@ -1,0 +1,336 @@
+[{
+  "_id": {
+    "$oid": "693b145ddfb619724c140861"
+  },
+  "invoiceNumber": "INV-202512-0001",
+  "status": "pending",
+  "userSnapshot": {
+    "email": "jolopgem@gmail.com",
+    "address": "99 Conestoga Blvd,Kitchener,ON,N2P 2N5"
+  },
+  "paymentInfo": {
+    "paymentMethod": "credit",
+    "cardHolderName": "Jorge Lopez",
+    "cardNumber": "****2345",
+    "expiryDate": "02/26",
+    "cvv": null
+  },
+  "items": [
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db607b"
+      },
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "quantity": 1,
+      "unitPrice": 8.792,
+      "subtotal": 8.792
+    },
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db607c"
+      },
+      "title": "1984",
+      "author": "George Orwell",
+      "quantity": 1,
+      "unitPrice": 14.99,
+      "subtotal": 14.99
+    }
+  ],
+  "totalAmount": 23.782,
+  "orderDate": {
+    "$date": "2025-12-11T18:58:37.773Z"
+  },
+  "createdAt": {
+    "$date": "2025-12-11T18:58:37.774Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T18:58:37.774Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693b3a96cdf2c7547f74b5da"
+  },
+  "invoiceNumber": "INV-202512-0002",
+  "status": "pending",
+  "userSnapshot": {
+    "email": "eli@gmail.com",
+    "address": "86 Doon Mills Dr,Kitchener,ON,N2P 2S3"
+  },
+  "paymentInfo": {
+    "paymentMethod": "debit",
+    "cardHolderName": "Elizabeth Ricardez",
+    "cardNumber": "****3456",
+    "expiryDate": "02/27",
+    "cvv": null
+  },
+  "items": [
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db6081"
+      },
+      "title": "Sapiens: A Brief History of Humankind",
+      "author": "Yuval Noah Harari",
+      "quantity": 1,
+      "unitPrice": 19.99,
+      "subtotal": 19.99
+    },
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db6083"
+      },
+      "title": "The Midnight Library",
+      "author": "Matt Haig",
+      "quantity": 1,
+      "unitPrice": 15.99,
+      "subtotal": 15.99
+    },
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db6084"
+      },
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "quantity": 1,
+      "unitPrice": 18.99,
+      "subtotal": 18.99
+    }
+  ],
+  "totalAmount": 54.97,
+  "orderDate": {
+    "$date": "2025-12-11T21:41:42.894Z"
+  },
+  "createdAt": {
+    "$date": "2025-12-11T21:41:42.896Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T21:41:42.896Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693b3be8cdf2c7547f74b5f5"
+  },
+  "invoiceNumber": "INV-202512-0003",
+  "status": "pending",
+  "userSnapshot": {
+    "email": "eli@gmail.com",
+    "address": "86 Doon Mills Dr,Kitchener,ON,N2P 2S3"
+  },
+  "paymentInfo": {
+    "paymentMethod": "credit",
+    "cardHolderName": "Elizabeth Ricardez",
+    "cardNumber": "****3456",
+    "expiryDate": "03/29",
+    "cvv": null
+  },
+  "items": [
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db6080"
+      },
+      "title": "The Alchemist",
+      "author": "Paulo Coelho",
+      "quantity": 1,
+      "unitPrice": 13.99,
+      "subtotal": 13.99
+    },
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db607f"
+      },
+      "title": "The Catcher in the Rye",
+      "author": "J.D. Salinger",
+      "quantity": 1,
+      "unitPrice": 11.99,
+      "subtotal": 11.99
+    }
+  ],
+  "totalAmount": 25.98,
+  "orderDate": {
+    "$date": "2025-12-11T21:47:20.216Z"
+  },
+  "createdAt": {
+    "$date": "2025-12-11T21:47:20.218Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T21:47:20.218Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693b3ccdcdf2c7547f74b621"
+  },
+  "invoiceNumber": "INV-202512-0004",
+  "status": "pending",
+  "userSnapshot": {
+    "email": "andy@gmail.com",
+    "address": "525 Langevin St,Winnipeg,MB,R2H 2V9"
+  },
+  "paymentInfo": {
+    "paymentMethod": "debit",
+    "cardHolderName": "Andrea Lopez",
+    "cardNumber": "****7654",
+    "expiryDate": "09/27",
+    "cvv": null
+  },
+  "items": [
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db6081"
+      },
+      "title": "Sapiens: A Brief History of Humankind",
+      "author": "Yuval Noah Harari",
+      "quantity": 1,
+      "unitPrice": 19.99,
+      "subtotal": 19.99
+    },
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db6082"
+      },
+      "title": "The Silent Patient",
+      "author": "Alex Michaelides",
+      "quantity": 1,
+      "unitPrice": 16.99,
+      "subtotal": 16.99
+    },
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db6084"
+      },
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "quantity": 1,
+      "unitPrice": 18.99,
+      "subtotal": 18.99
+    },
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db6083"
+      },
+      "title": "The Midnight Library",
+      "author": "Matt Haig",
+      "quantity": 1,
+      "unitPrice": 15.99,
+      "subtotal": 15.99
+    }
+  ],
+  "totalAmount": 71.96,
+  "orderDate": {
+    "$date": "2025-12-11T21:51:09.990Z"
+  },
+  "createdAt": {
+    "$date": "2025-12-11T21:51:09.992Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T21:51:09.992Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693b3d6bcdf2c7547f74b647"
+  },
+  "invoiceNumber": "INV-202512-0005",
+  "status": "pending",
+  "userSnapshot": {
+    "email": "jake@gmail.com",
+    "address": "372 Pierre-Bertrand Blvd,Quebec,QC,G1M 2C8"
+  },
+  "paymentInfo": {
+    "paymentMethod": "credit",
+    "cardHolderName": "Jake Evans",
+    "cardNumber": "****4255",
+    "expiryDate": "12/26",
+    "cvv": null
+  },
+  "items": [
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db607f"
+      },
+      "title": "The Catcher in the Rye",
+      "author": "J.D. Salinger",
+      "quantity": 1,
+      "unitPrice": 11.99,
+      "subtotal": 11.99
+    },
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db6083"
+      },
+      "title": "The Midnight Library",
+      "author": "Matt Haig",
+      "quantity": 1,
+      "unitPrice": 15.99,
+      "subtotal": 15.99
+    },
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db607e"
+      },
+      "title": "The Hobbit",
+      "author": "J.R.R. Tolkien",
+      "quantity": 1,
+      "unitPrice": 17.99,
+      "subtotal": 17.99
+    }
+  ],
+  "totalAmount": 45.97,
+  "orderDate": {
+    "$date": "2025-12-11T21:53:47.633Z"
+  },
+  "createdAt": {
+    "$date": "2025-12-11T21:53:47.636Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T21:53:47.636Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "693b3e16cdf2c7547f74b664"
+  },
+  "invoiceNumber": "INV-202512-0006",
+  "status": "pending",
+  "userSnapshot": {
+    "email": "neil@gmail.com",
+    "address": "2 Shoreham Ave,Ottawa,ON,K2G 3T7"
+  },
+  "paymentInfo": {
+    "paymentMethod": "credit",
+    "cardHolderName": "Neil Comfort",
+    "cardNumber": "****1651",
+    "expiryDate": "05/30",
+    "cvv": null
+  },
+  "items": [
+    {
+      "bookId": {
+        "$oid": "693b12ed280ae18079db607c"
+      },
+      "title": "1984",
+      "author": "George Orwell",
+      "quantity": 1,
+      "unitPrice": 14.99,
+      "subtotal": 14.99
+    }
+  ],
+  "totalAmount": 14.99,
+  "orderDate": {
+    "$date": "2025-12-11T21:56:38.399Z"
+  },
+  "createdAt": {
+    "$date": "2025-12-11T21:56:38.400Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-11T21:56:38.400Z"
+  },
+  "__v": 0
+}]
