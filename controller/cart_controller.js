@@ -321,7 +321,7 @@ function parseAddressString(addressString) {
     const parts = addressString.split(',').map(part => part.trim());
 
     if (parts.length < 4) {
-        console.error("El formato del string no es válido");
+        console.error("String format s not valid");
         return null;
     }
 
