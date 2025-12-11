@@ -278,9 +278,17 @@ function onInputChange(form) {
     }
 }
 
-async function sendCheckoutData(orderData, userId) {
+function downloadOrderPDF(orderId) {
+    // Placeholder for PDF download functionality
+    alert('PDF download feature coming soon!\nOrder ID: ' + orderId);
+
+    // When you implement it, you can do something like:
+    // window.location.href = '/orders/' + orderId + '/download-pdf';
+}
+
+async function sendCheckoutData(orderData) {
     try {
-        const response = await fetch(`/order/${userId}`, {
+        const response = await fetch(`/checkout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -340,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
         calculateTotals();
 
         // Form submission handler
-        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+        document.getElementById('checkoutForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             e.stopPropagation();
 
@@ -358,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cardNumber = document.getElementById('cardNumber');
             const expiryDate = document.getElementById('expiryDate');
             const cvv = document.getElementById('cvv');
+            const userId = document.getElementById('userId').value;
 
             // Validate shipping fields (if not using registered address)
             const useRegisteredAddress = document.getElementById('useRegisteredAddress').checked;
@@ -418,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else {
                 // If using registered address, ensure fields are marked as valid
-                [firstName, lastName, address, city, province, postalCode].forEach(function(field) {
+                [firstName, lastName, address, city, province, postalCode].forEach(function (field) {
                     field.classList.remove('is-invalid');
                     field.classList.add('is-valid');
                 });
@@ -475,16 +484,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Prepare order data
                 const orderData = {
-                    shipping: {
-                        firstName: firstName.value,
-                        lastName: lastName.value,
-                        address: address.value,
-                        city: city.value,
-                        province: province.value,
-                        postalCode: postalCode.value
-                    },
-                    payment: {
-                        method: paymentMethod.value,
+                    userId: userId,
+                    paymentInfo: {
+                        paymentMethod: paymentMethod.value,
                         cardHolderName: cardHolderName.value,
                         cardNumber: cardNumber.value.replace(/\s/g, ''),
                         expiryDate: expiryDate.value,
@@ -492,16 +494,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
 
-                console.log('Order data:', orderData);
+                await sendCheckoutData(orderData);
 
-                sendCheckoutData(orderData,);
+                showToast('Success', 'Your order has been placed successfully!', 'success');
 
-                alert('Order placed successfully! (This is a demo)');
+                setTimeout(() => {
+                    window.location.href = `/home`;
+                }, 1200);
             } else {
                 // Scroll to first invalid field
                 const firstInvalid = document.querySelector('.is-invalid');
                 if (firstInvalid) {
-                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalid.scrollIntoView({behavior: 'smooth', block: 'center'});
                 }
             }
         });

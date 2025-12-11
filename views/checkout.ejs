@@ -116,16 +116,20 @@
                     </div>
                     <div class="card-body">
                         <!-- Use Registered Address Checkbox -->
-                        <div class="form-check mb-3">
-                            <input class="form-check-input"
-                                   type="checkbox"
-                                   id="useRegisteredAddress"
-                                    <%= user ? 'checked' : '' %>
-                                   onchange="toggleAddressFields()">
-                            <label class="form-check-label" for="useRegisteredAddress">
-                                Use my registered address
-                            </label>
-                        </div>
+                        <input class="form-check-input"
+                               type="checkbox"
+                               hidden="true"
+                               id="useRegisteredAddress"
+                                <%= user ? 'checked' : '' %>
+                               onchange="toggleAddressFields()">
+
+                        <input class="form-check-input"
+                               type="text"
+                               value="<%= session.userId %>"
+                               hidden="true"
+                               id="userId"
+
+                               >
 
                         <!-- First Name -->
                         <div class="mb-3">

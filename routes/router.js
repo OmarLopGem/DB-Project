@@ -2,6 +2,7 @@ import StoreController from "../controller/controller.js";
 import CartController from "../controller/cart_controller.js";
 import express from "express"
 import salesController from "../controller/sampleController.js";
+import {createOrder, getUserOrders} from "../controller/orderController.js";
 
 const router = express.Router();
 
@@ -22,6 +23,9 @@ router.post('/cart/add/:userId', CartController.addBookToCart);
 router.get('/cart/:userId', CartController.showCart);
 
 // checkout
-// router.post('/checkout/:userId', );
+router.post('/checkout',createOrder)
+
+// order
+router.get('/orders/:userId', getUserOrders);
 
 export default router;

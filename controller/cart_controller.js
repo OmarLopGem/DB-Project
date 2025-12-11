@@ -287,12 +287,48 @@ export default class CartController {
             const totalItems = cart ? cartUtils.countTotalItems(cart) : 0;
             const subTotal = cart ? cartUtils.calculateSubtotal(cart) : 0;
             const cartCount = cart ? cart.items.length : 0;
+            const parsedString = parseAddressString(user.address);
             res.render('checkout', {
                 'cartItems': cart.items,
-                'user': user, 'totalItems': totalItems, 'subTotal': subTotal, 'cartCount': cartCount
+                'user': {lastName: user.lastName, firstName: user.firstName, ...parsedString},
+                'totalItems': totalItems,
+                'subTotal': subTotal,
+                'cartCount': cartCount
             })
         } catch (error) {
             res.status(500).json({message: "Error fetching cart", error: error.message});
         }
     }
+
+    static async clearCartByUserId(userId) {
+
+        try {
+            const cart = await cartModel.findOne({userId});
+            if (cart) {
+                cart.items = [];
+                await cart.save();
+            }
+        }catch (e) {
+            console.error("Error clearing cart for user:", e.message);
+        }
+
+    }
+}
+
+function parseAddressString(addressString) {
+    const parts = addressString.split(',').map(part => part.trim());
+
+    if (parts.length < 4) {
+        console.error("El formato del string no es válido");
+        return null;
+    }
+
+    const [address, city, provinceCode, postalCode] = parts;
+
+    return {
+        address: address,
+        city: city,
+        province: provinceCode,
+        postalCode: postalCode
+    };
 }

@@ -1,15 +1,19 @@
 <body>
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
-                <img src="/assets/logo.png" alt="New Pages Systems Logo" class="logo">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <img src="/assets/logo.png" alt="New Pages Systems Logo" class="logo">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                    class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
 
                         <% if (session?.userType === "customer") { %>
                             <li class="nav-item"><a class="nav-link" href="/home">HOME</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/my_orders">MY ORDERS</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/orders/<%= session.userId %>">MY ORDERS</a>
+                        </li>
                             <li class="nav-item"><a class="nav-link" href="/logout">LOGOUT</a></li>
                             
                         <% } else if (session?.userType === "admin") {%>
@@ -24,41 +28,49 @@
                         
                     </ul>
 
-                    <% if (session?.userType === "customer") { %>
-                        <div class="dropdown">
-                            <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi-cart-fill me-1"></i>
-                                Cart
-                                <span id="cart-badge-count" class="badge bg-dark text-white ms-1 rounded-pill">
+            <% if (session?.userType === "customer") { %>
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span id="cart-badge-count" class="badge bg-dark text-white ms-1 rounded-pill">
                 <%= typeof cartCount !== 'undefined' ? cartCount : 0 %>
             </span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 250px;">
+                        <li>
+                            <div class="px-3 py-2">
+                                <p class="mb-0 fw-bold">Subtotal: $<span
+                                            id="cart-subtotal"><%= typeof subTotal !== 'undefined' ? subTotal : '0.00' %></span>
+                                </p>
+                                <small class="text-muted">Total Items: <span
+                                            id="cart-total-items"><%= typeof cartCount !== 'undefined' ? cartCount : 0 %></span></small>
+                            </div>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <button class="dropdown-item" type="button"
+                                    onclick="handleViewCart('<%= session.userId %>')">
+                                <i class="bi bi-eye me-2"></i>View Items
                             </button>
+                        </li>
 
-                            <ul class="dropdown-menu dropdown-menu-end" style="min-width: 250px;">
-                                <li>
-                                    <div class="px-3 py-2">
-                                        <p class="mb-0 fw-bold">Subtotal: $<span id="cart-subtotal"><%= typeof subTotal !== 'undefined' ? subTotal : '0.00' %></span></p>
-                                        <small class="text-muted">Total Items: <span id="cart-total-items"><%= typeof cartCount !== 'undefined' ? cartCount : 0 %></span></small>
-                                    </div>
-                                </li>
-
-                                <li><hr class="dropdown-divider"></li>
-
-                                <li>
-                                    <button class="dropdown-item" type="button" onclick="handleViewCart('<%= session.userId %>')">
-                                        <i class="bi bi-eye me-2"></i>View Items
-                                    </button>
-                                </li>
-
-                                <li>
-                                    <button class="dropdown-item text-danger" type="button" onclick="handleClearCart('<%= session.userId %>')">
-                                        <i class="bi bi-trash me-2"></i>Clear Cart
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    <% } %>
-                    
+                        <li>
+                            <button class="dropdown-item text-danger" type="button"
+                                    onclick="handleClearCart('<%= session.userId %>')">
+                                <i class="bi bi-trash me-2"></i>Clear Cart
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-        </nav>
+            <% } %>
+
+        </div>
+    </div>
+</nav>

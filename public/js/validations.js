@@ -12,29 +12,7 @@ function validateCardNumber(cardNumber) {
     const cleanNumber = cardNumber.replace(/\s/g, '');
 
     // Check if it's 16 digits
-    if (!/^\d{16}$/.test(cleanNumber)) {
-        return false;
-    }
-
-    // Luhn algorithm
-    let sum = 0;
-    let isEven = false;
-
-    for (let i = cleanNumber.length - 1; i >= 0; i--) {
-        let digit = parseInt(cleanNumber[i]);
-
-        if (isEven) {
-            digit *= 2;
-            if (digit > 9) {
-                digit -= 9;
-            }
-        }
-
-        sum += digit;
-        isEven = !isEven;
-    }
-
-    return sum % 10 === 0;
+    return /^\d{16}$/.test(cleanNumber);
 }
 
 function validateExpiryDate(expiryDate) {

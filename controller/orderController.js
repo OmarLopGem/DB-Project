@@ -1,5 +1,8 @@
 import orderModel from '../model/order_model.js';
 import bookModel from '../model/book_model.js';
+import userModel from '../model/user_model.js';
+import cartModel from "../model/cart_model.js";
+import CartController from "./cart_controller.js";
 
 const generateInvoiceNumber = async () => {
     const prefix = 'INV';
@@ -20,15 +23,57 @@ const generateInvoiceNumber = async () => {
     return `${prefix}-${year}${month}-${String(sequence).padStart(4, '0')}`;
 };
 
+const maskCardNumber = (cardNumber) => {
+    if (!cardNumber) return null;
+    const cleaned = cardNumber.replace(/\s/g, '');
+    return `****${cleaned.slice(-4)}`;
+};
+
 export const createOrder = async (req, res) => {
     try {
-        const { userId, userSnapshot, items } = req.body;
+        const { userId, paymentInfo } = req.body;
+
+        // Validar userId
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        // Obtener información del usuario
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Crear userSnapshot desde el usuario
+        const userSnapshot = {
+            name: user.name,
+            email: user.email,
+            address: user.address || ''
+        };
+
+        // cart
+        const {items} = await cartModel.findOne({userId}).populate('items.bookId') || {items: []};
+        if (items.length === 0) {
+            return res.status(400).json({ message: "Cart is empty" });
+        }
 
         if (!items || items.length === 0) {
             return res.status(400).json({ message: "Order must contain at least one item" });
         }
 
-        // Validate and prepare order items
+        if (!paymentInfo || !paymentInfo.paymentMethod) {
+            return res.status(400).json({ message: "Payment information is required" });
+        }
+
+        if (paymentInfo.paymentMethod === 'credit_card' || paymentInfo.paymentMethod === 'debit_card') {
+            if (!paymentInfo.cardHolderName || !paymentInfo.cardNumber ||
+                !paymentInfo.expiryDate || !paymentInfo.cvv) {
+                return res.status(400).json({
+                    message: "Card information is incomplete"
+                });
+            }
+        }
+
         const orderItems = [];
         let totalAmount = 0;
 
@@ -67,19 +112,28 @@ export const createOrder = async (req, res) => {
             await book.save();
         }
 
-        // Generate invoice number
         const invoiceNumber = await generateInvoiceNumber();
 
-        // Create order
+        const securePaymentInfo = {
+            paymentMethod: paymentInfo.paymentMethod,
+            cardHolderName: paymentInfo.cardHolderName || null,
+            cardNumber: maskCardNumber(paymentInfo.cardNumber),
+            expiryDate: paymentInfo.expiryDate || null,
+            cvv: null
+        };
+
         const newOrder = new orderModel({
             invoiceNumber,
             userSnapshot,
+            paymentInfo: securePaymentInfo,
             items: orderItems,
             totalAmount,
             status: 'pending'
         });
 
         const savedOrder = await newOrder.save();
+        // Clear user's cart
+        await CartController.clearCartByUserId(userId);
 
         res.status(201).json({
             message: "Order created successfully",
@@ -98,13 +152,15 @@ export const getAllOrders = async (req, res) => {
             status,
             startDate,
             endDate,
-            email
+            email,
+            paymentMethod
         } = req.query;
 
         const filter = {};
 
         if (status) filter.status = status;
         if (email) filter['userSnapshot.email'] = { $regex: email, $options: 'i' };
+        if (paymentMethod) filter['paymentInfo.paymentMethod'] = paymentMethod;
         if (startDate || endDate) {
             filter.orderDate = {};
             if (startDate) filter.orderDate.$gte = new Date(startDate);
@@ -199,14 +255,20 @@ export const updateOrderStatus = async (req, res) => {
 
 export const getUserOrders = async (req, res) => {
     try {
-        const { email } = req.params;
+        const { userId } = req.params;
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const email = user.email;
 
         const orders = await orderModel
             .find({ 'userSnapshot.email': email })
             .populate('items.bookId')
             .sort({ orderDate: -1 });
 
-        res.status(200).json({ orders, count: orders.length });
+        res.render('my_orders', { orders, count: orders.length });
     } catch (error) {
         res.status(500).json({ message: "Error fetching user orders", error: error.message });
     }
@@ -224,12 +286,24 @@ export const getOrderStats = async (req, res) => {
             { $group: { _id: null, total: { $sum: '$totalAmount' } } }
         ]);
 
+        const paymentMethodStats = await orderModel.aggregate([
+            { $match: { status: 'completed' } },
+            {
+                $group: {
+                    _id: '$paymentInfo.paymentMethod',
+                    count: { $sum: 1 },
+                    revenue: { $sum: '$totalAmount' }
+                }
+            }
+        ]);
+
         res.status(200).json({
             totalOrders,
             pendingOrders,
             completedOrders,
             cancelledOrders,
-            totalRevenue: totalRevenue[0]?.total || 0
+            totalRevenue: totalRevenue[0]?.total || 0,
+            paymentMethodStats
         });
     } catch (error) {
         res.status(500).json({ message: "Error fetching statistics", error: error.message });
@@ -245,7 +319,6 @@ export const deleteOrder = async (req, res) => {
             return res.status(404).json({ message: "Order not found" });
         }
 
-        // Restore stock if order wasn't cancelled
         if (order.status !== 'cancelled') {
             for (const item of order.items) {
                 await bookModel.findByIdAndUpdate(

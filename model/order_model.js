@@ -6,20 +6,29 @@ const userSnapshotSchema = mongoose.Schema({
     address: String,
 }, {_id: false});
 
+const paymentInfoSchema = mongoose.Schema({
+    paymentMethod: {type: String, required: true},
+    cardHolderName: String,
+    cardNumber: String,
+    expiryDate: String,
+    cvv: String
+}, {_id: false});
+
 const orderItemSchema = mongoose.Schema({
-    bookId: {type:mongoose.Schema.Types.ObjectId, ref:"book", required:true},
+    bookId: {type: mongoose.Schema.Types.ObjectId, ref: "book", required: true},
     title: String,
     author: String,
-    quantity: {type:Number, required:true},
+    quantity: {type: Number, required: true},
     unitPrice: Number,
     subtotal: Number,
 }, {_id: false});
 
 const ordersSchema = mongoose.Schema({
-    invoiceNumber: {type:String, required: true, unique: true},
-    orderDate: {type:Date, default: Date.now},
+    invoiceNumber: {type: String, required: true, unique: true},
+    orderDate: {type: Date, default: Date.now},
     status: {type: String, enum: ["pending", "completed", "cancelled"], default: "pending"},
     userSnapshot: userSnapshotSchema,
+    paymentInfo: paymentInfoSchema,
     items: [orderItemSchema],
     totalAmount: {type: Number, required: true}
 }, { timestamps: true});
