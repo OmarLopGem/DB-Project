@@ -278,12 +278,41 @@ function onInputChange(form) {
     }
 }
 
-function downloadOrderPDF(orderId) {
-    // Placeholder for PDF download functionality
-    alert('PDF download feature coming soon!\nOrder ID: ' + orderId);
+async function downloadOrderPDF(orderId) {
+    if (!orderId) {
+        console.error('Order ID is required to download PDF');
+        return;
+    }
 
-    // When you implement it, you can do something like:
-    // window.location.href = '/orders/' + orderId + '/download-pdf';
+    showToast('Info', 'Generating PDF...', 'warning');
+
+    try {
+        const url = `/order/pdf/${orderId}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `invoice-${orderId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+
+        a.remove();
+        window.URL.revokeObjectURL(downloadUrl);
+
+        showToast('Success', 'PDF downloaded successfully!', 'success');
+
+    } catch (e) {
+        console.error('PDF Download Error:', e);
+        showToast('Error', 'Could not download PDF. Please try again.', 'error');
+    }
 }
 
 async function sendCheckoutData(orderData) {

@@ -3,6 +3,7 @@ import bookModel from '../model/book_model.js';
 import userModel from '../model/user_model.js';
 import cartModel from "../model/cart_model.js";
 import CartController from "./cart_controller.js";
+import reportController from "./ReportController.js";
 
 const generateInvoiceNumber = async () => {
     const prefix = 'INV';
@@ -267,13 +268,28 @@ export const getUserOrders = async (req, res) => {
             .find({ 'userSnapshot.email': email })
             .populate('items.bookId')
             .sort({ orderDate: -1 });
-
         res.render('my_orders', { orders, count: orders.length });
     } catch (error) {
         res.status(500).json({ message: "Error fetching user orders", error: error.message });
     }
 };
 
+export const getPdfOrderInvoice = async (req, res) => {
+    try {
+        const order = await orderModel.findById(req.params.orderId).populate('items.bookId').lean();
+        if (!order) {
+            return res.status(404).json({message: "Order not found"});
+        }
+        await reportController.sendInvoice(
+            res,
+            order,
+            `invoice-${order.invoiceNumber}.pdf`
+        );
+    }catch (e) {
+        console.error('Invoice generation error:', error);
+        res.status(500).json({message: "Error generating PDF invoice", error: e.message});
+    }
+}
 export const getOrderStats = async (req, res) => {
     try {
         const totalOrders = await orderModel.countDocuments();
