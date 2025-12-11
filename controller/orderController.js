@@ -5,7 +5,7 @@ import bookModel from '../model/book_model.js';
 import userModel from '../model/user_model.js';
 import cartModel from "../model/cart_model.js";
 import CartController from "./cart_controller.js";
-import ReportController from "./reportController.js";
+import reportController from "./reportController.js";
 
 const generateInvoiceNumber = async () => {
     const prefix = 'INV';
@@ -285,7 +285,7 @@ export const getPdfOrderInvoice = async (req, res) => {
             `invoice-${order.invoiceNumber}.pdf`
         );
     }catch (e) {
-        console.error('Invoice generation error:', error);
+        console.error('Invoice generation error:', e);
         res.status(500).json({message: "Error generating PDF invoice", error: e.message});
     }
 }

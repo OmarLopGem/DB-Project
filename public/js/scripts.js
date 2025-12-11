@@ -298,14 +298,13 @@ function onInputChange(form) {
 }
 
 async function downloadOrderPDF(orderId) {
-    if (!orderId) {
-        console.error('Order ID is required to download PDF');
-        return;
-    }
-
-    showToast('Info', 'Generating PDF...', 'warning');
-
     try {
+        if (!orderId) {
+            console.error('Order ID is required to download PDF');
+            return;
+        }
+
+        showToast('Info', 'Generating PDF...', 'warning');
         const url = `/order/pdf/${orderId}`;
 
         const response = await fetch(url);
