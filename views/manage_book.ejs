@@ -1,0 +1,267 @@
+<%- include('./partials/header') %>
+<%- include('./partials/nav') %>
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        <h3 class="mb-0">
+                            <%= book ? 'Edit Book' : 'Add New Book' %>
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+                        <form id="bookForm" method="POST" action="<%= book ? `/books/update/${book._id}` : '/books/create' %>">
+
+                            <!-- Title -->
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="title"
+                                        name="title"
+                                        value="<%= book ? book.title : '' %>"
+                                        <%= book ? 'readonly' : 'required' %>
+                                >
+                                <% if (book) { %>
+                                    <small class="text-muted">Title cannot be edited</small>
+                                <% } %>
+                            </div>
+
+                            <!-- Author -->
+                            <div class="mb-3">
+                                <label for="author" class="form-label">Author <span class="text-danger">*</span></label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="author"
+                                        name="author"
+                                        value="<%= book ? book.author : '' %>"
+                                        <%= book ? 'readonly' : 'required' %>
+                                >
+                                <% if (book) { %>
+                                    <small class="text-muted">Author cannot be edited</small>
+                                <% } %>
+                            </div>
+
+                            <!-- Editor -->
+                            <div class="mb-3">
+                                <label for="editor" class="form-label">Editor <span class="text-danger">*</span></label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="editor"
+                                        name="editor"
+                                        value="<%= book ? book.editor : '' %>"
+                                        required
+                                >
+                            </div>
+
+                            <!-- Year -->
+                            <div class="mb-3">
+                                <label for="year" class="form-label">Year <span class="text-danger">*</span></label>
+                                <input
+                                        type="number"
+                                        class="form-control"
+                                        id="year"
+                                        name="year"
+                                        value="<%= book ? book.year : '' %>"
+                                        min="1000"
+                                        max="<%= new Date().getFullYear() + 1 %>"
+                                        <%= book ? 'readonly' : 'required' %>
+                                >
+                                <% if (book) { %>
+                                    <small class="text-muted">Year cannot be edited</small>
+                                <% } %>
+                            </div>
+
+                            <!-- ISBN -->
+                            <div class="mb-3">
+                                <label for="isbn" class="form-label">ISBN <span class="text-danger">*</span></label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="isbn"
+                                        name="isbn"
+                                        value="<%= book ? book.isbn : '' %>"
+                                        <%= book ? 'readonly' : 'required' %>
+                                >
+                                <% if (book) { %>
+                                    <small class="text-muted">ISBN cannot be edited</small>
+                                <% } %>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price (CAD) <span class="text-danger">*</span></label>
+                                <input
+                                        type="number"
+                                        class="form-control"
+                                        id="price"
+                                        name="price"
+                                        value="<%= book ? book.price : '' %>"
+                                        step="0.01"
+                                        min="0"
+                                        required
+                                >
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="mb-3">
+                                <label for="stock" class="form-label">Stock <span class="text-danger">*</span></label>
+                                <input
+                                        type="number"
+                                        class="form-control"
+                                        id="stock"
+                                        name="stock"
+                                        value="<%= book ? book.stock : '' %>"
+                                        min="0"
+                                        required
+                                >
+                            </div>
+
+                            <!-- Discount -->
+                            <div class="mb-3">
+                                <label for="discount" class="form-label">Discount (%)</label>
+                                <input
+                                        type="number"
+                                        class="form-control"
+                                        id="discount"
+                                        name="discount"
+                                        value="<%= book && book.discount ? book.discount : '' %>"
+                                        min="0"
+                                        max="100"
+                                        step="1"
+                                >
+                                <small class="text-muted">Optional - Leave empty for no discount</small>
+                            </div>
+
+                            <!-- Cover URL with Preview -->
+                            <div class="mb-3">
+                                <label for="cover" class="form-label">Cover Image URL <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input
+                                            type="url"
+                                            class="form-control"
+                                            id="cover"
+                                            name="cover"
+                                            value="<%= book ? book.cover : '' %>"
+                                            placeholder="https://example.com/book-cover.jpg"
+                                            required
+                                    >
+                                    <button
+                                            class="btn btn-outline-primary"
+                                            type="button"
+                                            id="previewBtn"
+                                            onclick="loadCoverPreview()"
+                                    >
+                                        <i class="bi bi-eye"></i> Preview
+                                    </button>
+                                </div>
+                                <small class="text-muted">Enter a valid image URL</small>
+                            </div>
+
+                            <!-- Cover Preview -->
+                            <div class="mb-3" id="coverPreviewContainer" style="display: none;">
+                                <label class="form-label">Cover Preview</label>
+                                <div class="text-center p-3 border rounded bg-light">
+                                    <img
+                                            id="coverPreview"
+                                            src=""
+                                            alt="Cover Preview"
+                                            class="img-fluid"
+                                            style="max-height: 300px; display: none;"
+                                    >
+                                    <div id="previewError" class="text-danger" style="display: none;">
+                                        <i class="bi bi-exclamation-triangle"></i> Unable to load image
+                                    </div>
+                                    <div id="previewLoading" style="display: none;">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Synopsis -->
+                            <div class="mb-3">
+                                <label for="synopsis" class="form-label">Synopsis <span class="text-danger">*</span></label>
+                                <textarea
+                                        class="form-control"
+                                        id="synopsis"
+                                        name="synopsis"
+                                        rows="6"
+                                        required
+                                ><%= book ? book.synopsis : '' %></textarea>
+                                <small class="text-muted">Provide a brief description of the book</small>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="d-flex gap-2 justify-content-end">
+                                <a href="/" class="btn btn-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-success">
+                                    <%= book ? 'Update Book' : 'Add Book' %>
+                                </button>
+                            </div>
+                            <input
+                                    type="text"
+                                    id="bookId"
+                                    hidden
+                                    value="<%= book ? book.id : '' %>"
+                            >
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function loadCoverPreview() {
+        const coverUrl = document.getElementById('cover').value.trim();
+        const previewContainer = document.getElementById('coverPreviewContainer');
+        const previewImg = document.getElementById('coverPreview');
+        const previewError = document.getElementById('previewError');
+        const previewLoading = document.getElementById('previewLoading');
+
+        if (!coverUrl) {
+            alert('Please enter a cover URL first');
+            return;
+        }
+
+        previewContainer.style.display = 'block';
+        previewImg.style.display = 'none';
+        previewError.style.display = 'none';
+        previewLoading.style.display = 'block';
+
+        const testImg = new Image();
+
+        testImg.onload = function() {
+            previewLoading.style.display = 'none';
+            previewImg.src = coverUrl;
+            previewImg.style.display = 'block';
+        };
+
+        testImg.onerror = function() {
+            previewLoading.style.display = 'none';
+            previewError.style.display = 'block';
+        };
+
+        testImg.src = coverUrl;
+    }
+
+    // Auto-preview if editing existing book
+    <% if (book && book.cover) { %>
+    window.addEventListener('DOMContentLoaded', function() {
+        loadCoverPreview();
+    });
+    <% } %>
+
+</script>
+
+
+<%- include('./partials/footer') %>

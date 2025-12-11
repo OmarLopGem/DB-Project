@@ -330,10 +330,16 @@ async function sendCheckoutData(orderData) {
     }
 }
 
+async function handleManageBook(bookId) {
+    window.location.href = `/book/${bookId || -1}`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = $('#register-form');
     const loginForm = $('#login-form');
     const checkOutForm = $('#checkoutForm');
+    const bookForm = $('#bookForm');
+
 
     if (registerForm) {
         registerForm.addEventListener('submit', validateRegistration);
@@ -540,4 +546,106 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     }
+
+    if(bookForm){
+        bookForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value.trim();
+            const author = document.getElementById('author').value.trim();
+            const editor = document.getElementById('editor').value.trim();
+            const year = parseInt(document.getElementById('year').value);
+            const isbn = document.getElementById('isbn').value.trim();
+            const price = parseFloat(document.getElementById('price').value);
+            const stock = parseInt(document.getElementById('stock').value);
+            const discount = document.getElementById('discount').value.trim();
+            const cover = document.getElementById('cover').value.trim();
+            const synopsis = document.getElementById('synopsis').value.trim();
+            const bookId = document.getElementById('bookId').value;
+
+            if (!title || !author || !editor || !isbn || !cover || !synopsis) {
+                showToast('Warning', 'Please fill all required fields', 'warning');
+                return;
+            }
+
+            if (price < 0) {
+                showToast('Warning', 'Price cannot be negative', 'warning');
+                return;
+            }
+
+            if (stock < 0) {
+                showToast('Warning', 'Stock cannot be negative', 'warning');
+                return;
+            }
+
+            if (discount && (parseFloat(discount) < 0 || parseFloat(discount) > 100)) {
+                showToast('Warning', 'Discount must be between 0 and 100', 'warning');
+                return;
+            }
+
+            if (isNaN(year) || year < 1000 || year > new Date().getFullYear() + 1) {
+                showToast('Warning', 'Please enter a valid year', 'warning');
+                return;
+            }
+
+            if (isNaN(price) || isNaN(stock)) {
+                showToast('Warning', 'Price and stock must be valid numbers', 'warning');
+                return;
+            }
+
+            try {
+                new URL(cover);
+            } catch (err) {
+                showToast('Warning', 'Please enter a valid cover image URL', 'warning');
+                return;
+            }
+
+            const bookData = {
+                title: title,
+                author: author,
+                editor: editor,
+                year: year,
+                isbn: isbn,
+                price: parseFloat(price.toFixed(2)),
+                stock: stock,
+                cover: cover,
+                synopsis: synopsis
+            };
+
+            if (discount) {
+                bookData.discount = parseFloat(discount);
+            }
+
+            console.log('Book data to send:', bookData);
+
+            const url = '/book' + (bookId ? `/${bookId}` : '');
+            const method = bookId ? 'PUT' : 'POST';
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bookData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    showToast('Success', data.message || 'Book saved successfully!', 'success');
+
+                    setTimeout(() => {
+                        window.location.href = '/home';
+                    }, 1500);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Error', 'Failed to save book. Please try again.', 'danger');
+                });
+        });
+    }
+
 })

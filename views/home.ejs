@@ -6,6 +6,14 @@
         <div class="text-center text-white">
             <h1 class="display-4 fw-bolder">WELCOME TO THE BEST BOOK STORE ON THE INTERNET</h1>
         </div>
+        <% if (session?.userType === "admin") { %>
+            <div class="text-center text-white mt-3 mx-auto">
+                <button
+                        id="add-button" onclick="handleManageBook()" class="btn btn-success btn-lg w-100">
+                    <i ></i>ADD NEW BOOK
+                </button>
+            </div>
+        <% } %>
     </div>
 </header>
 
@@ -15,61 +23,68 @@
 
             <% books.forEach(book => { %>
 
-            <div class="card mx-3 mb-4 book-card" style="width: 240px;">
+                <div class="card mx-3 mb-4 book-card" style="width: 240px;">
 
-                <div class="image-container">
-                    <img src="<%= book.cover %>" class="card-img-top" alt="<%= book.title %>">
-                    
-                    <div class="overlay">
-                        <p class="mb-1 text-white"><strong>Author:</strong> <%= book.author %></p>
-                        <p class="mb-1 text-white"><strong>Editor:</strong> <%= book.editor %></p>
-                        <p class="mb-1 text-white"><strong>Year:</strong> <%= book.year %></p>
-                        <p class="mb-3 text-white"><strong>Stock:</strong> <%= book.stock %></p>
+                    <div class="image-container">
+                        <img src="<%= book.cover %>" class="card-img-top" alt="<%= book.title %>">
 
-                        <button 
-                            class="btn btn-light btn-sm"
-                            data-bs-toggle="modal"
-                            data-bs-target="#synopsisModal<%= book._id %>"
-                        >
-                            Synopsis
+                        <div class="overlay">
+                            <p class="mb-1 text-white"><strong>Author:</strong> <%= book.author %></p>
+                            <p class="mb-1 text-white"><strong>Editor:</strong> <%= book.editor %></p>
+                            <p class="mb-1 text-white"><strong>Year:</strong> <%= book.year %></p>
+                            <p class="mb-3 text-white"><strong>Stock:</strong> <%= book.stock %></p>
+
+                            <button
+                                    class="btn btn-light btn-sm mb-2"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#synopsisModal<%= book._id %>"
+                            >
+                                Synopsis
+                            </button>
+                            <button
+                                    onclick="handleManageBook('<%= book._id %>')"
+                                    class="btn btn-warning btn-sm"
+                            >
+                                Edit Book
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body text-center">
+                        <h5 class="card-title"><%= book.title %></h5>
+
+                        <div class="d-flex justify-content-center gap-2 mb-2">
+                            <p class="card-price mb-0">$<%= book.price.toFixed(2) %> CAD</p>
+
+                            <% if (book.discount) { %>
+                                <p class="card-discount mb-0 text-danger">-<%= book.discount %>%</p>
+                            <% } %>
+                        </div>
+
+                        <button class="btn btn-dark" type="button"
+                                onclick="handleAddCart('<%= session.userId %>', '<%= book._id %>')">
+                            Add to Cart
                         </button>
+
                     </div>
                 </div>
 
-                <div class="card-body text-center">
-                    <h5 class="card-title"><%= book.title %></h5>
+                <div class="modal fade" id="synopsisModal<%= book._id %>" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
 
-                    <div class="d-flex justify-content-center gap-2 mb-2">
-                        <p class="card-price mb-0">$<%= book.price.toFixed(2) %> CAD</p>
-                        
-                        <% if (book.discount) { %>
-                            <p class="card-discount mb-0 text-danger">-<%= book.discount %>%</p>
-                        <% } %>
-                    </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title"><%= book.title %> — Synopsis</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
 
-                    <button class="btn btn-dark" type="button" onclick="handleAddCart('<%= session.userId %>', '<%= book._id %>')">
-                        Add to Cart
-                    </button>
+                            <div class="modal-body">
+                                <p><%= book.synopsis %></p>
+                            </div>
 
-                </div>
-            </div>
-
-            <div class="modal fade" id="synopsisModal<%= book._id %>" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        
-                        <div class="modal-header">
-                            <h5 class="modal-title"><%= book.title %> — Synopsis</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-
-                        <div class="modal-body">
-                            <p><%= book.synopsis %></p>
-                        </div>
-
                     </div>
                 </div>
-            </div>
 
             <% }) %>
 

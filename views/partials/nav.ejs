@@ -18,8 +18,7 @@
                             
                         <% } else if (session?.userType === "admin") {%>
                             <li class="nav-item"><a class="nav-link" href="/home">HOME</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/add_edit">ADD & EDIT</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/orders">ORDERS</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/orders/all">ORDERS</a></li>
                             <li class="nav-item"><a class="nav-link" href="/logout">LOGOUT</a></li>
                         <% } else { %>
                             <li class="nav-item"><a class="nav-link" href="/">LOGIN</a></li>

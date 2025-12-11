@@ -2,7 +2,8 @@ import StoreController from "../controller/controller.js";
 import CartController from "../controller/cart_controller.js";
 import express from "express"
 import salesController from "../controller/sampleController.js";
-import {createOrder, getPdfOrderInvoice, getUserOrders} from "../controller/orderController.js";
+import {createOrder, getAllOrders, getPdfOrderInvoice, getUserOrders} from "../controller/orderController.js";
+import BookController from "../controller/book_controller.js";
 
 const router = express.Router();
 
@@ -26,7 +27,14 @@ router.get('/cart/:userId', CartController.showCart);
 router.post('/checkout',createOrder)
 
 // order
+router.get('/orders/all', getAllOrders);
 router.get('/orders/:userId', getUserOrders);
 router.get('/order/pdf/:orderId', getPdfOrderInvoice);
+
+// books
+router.get('/book/:bookId', BookController.manageBookView);
+router.post('/book', BookController.createBook);
+router.put('/book/:bookId', BookController.updateBook);
+// router.delete('/book/:bookId', BookController.deleteBook);
 
 export default router;

@@ -145,7 +145,7 @@ export const createOrder = async (req, res) => {
     }
 };
 
-export const getAllOrders = async (req, res) => {
+export const getAllOrdersoBJECTS = async (req, res) => {
     try {
         const {
             page = 1,
@@ -266,6 +266,19 @@ export const getUserOrders = async (req, res) => {
 
         const orders = await orderModel
             .find({ 'userSnapshot.email': email })
+            .populate('items.bookId')
+            .sort({ orderDate: -1 });
+        res.render('my_orders', { orders, count: orders.length });
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching user orders", error: error.message });
+    }
+};
+
+
+export const getAllOrders = async (req, res) => {
+    try {
+        const orders = await orderModel
+            .find({})
             .populate('items.bookId')
             .sort({ orderDate: -1 });
         res.render('my_orders', { orders, count: orders.length });
