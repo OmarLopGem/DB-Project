@@ -21,8 +21,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: { secure: false },
     store: MongoStore.create({
-        mongoUrl: "mongodb+srv://j-omar:LOGjor1602@cluster0.rmdoztf.mongodb.net/NewPages",
-        dbName: "NewPages",
+        mongoUrl: "mongodb+srv://j-omar:LOGjor1602@cluster0.rmdoztf.mongodb.net/NewPagesSystems_DB",
+        dbName: "NewPagesSystems_DB",
         collectionName: "sessions"
     })
 }));
